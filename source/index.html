@@ -47,6 +47,29 @@
       }
     }
   });
+
+  /**
+   * configure RequireJS
+   * prefer named modules to long paths, especially for version mgt
+   * or 3rd party libraries
+   */
+  loadRequireConfig(function(config) {
+    require.config(JSON.parse(config));
+  });
+
+  function loadRequireConfig(callback) {
+    var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        callback(xmlhttp.responseText);
+      }
+    }
+
+    xmlhttp.open('GET', '/js/config-require.json', true);
+    xmlhttp.send();
+  }
+
 </script>
 
 </body>

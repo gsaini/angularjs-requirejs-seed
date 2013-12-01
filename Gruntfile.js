@@ -2,6 +2,16 @@ module.exports = function (grunt) {
 
   var assetsDir = 'source/assets/';
 
+  function readBuildConfig () {
+    var configBuild = grunt.file.readJSON('source/js/config-build.json');
+    var configRequire = grunt.file.readJSON('source/js/config-require.json');
+
+    configBuild.shim = configRequire.shim;
+    configBuild.paths = configRequire.paths;
+
+    return configBuild;
+  }
+
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -115,7 +125,7 @@ module.exports = function (grunt) {
     },
     requirejs: {
       compile: {
-        options: grunt.file.readJSON('source/js/build-config.json')
+        options: readBuildConfig()
       }
     },
     uglify: {
@@ -181,11 +191,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build-js', ['copy', 'requirejs', 'uglify']);
   grunt.registerTask('build-css', ['css']);
-  grunt.registerTask('build', [
-    'karma:unitSingleRun', 'protractor:source', // test source
-    'build-css', 'build-js',                    // build
-    'karma:ci', 'protractor:build'              // test build
-  ]);
+  grunt.registerTask('build-test', ['karma:unitSingleRun', 'protractor:source','karma:ci', 'protractor:build']);
+  grunt.registerTask('build', ['build-css', 'build-js', 'build-test']);
 
   grunt.registerTask('default', ['build']);
 
