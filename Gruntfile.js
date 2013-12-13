@@ -191,8 +191,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build-js', ['copy', 'requirejs', 'uglify']);
   grunt.registerTask('build-css', ['css']);
-  grunt.registerTask('build-test', ['karma:unitSingleRun', 'protractor:source','karma:ci', 'protractor:build']);
-  grunt.registerTask('build', ['build-css', 'build-js', 'build-test']);
+  grunt.registerTask('build', ['build-css', 'build-js', 'karma:ci', 'protractor:build']);
 
   grunt.registerTask('default', ['build']);
 
