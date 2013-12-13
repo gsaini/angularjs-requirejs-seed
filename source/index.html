@@ -17,58 +17,29 @@
   // https://github.com/angular/angular.js/commit/603fe0d19608ffe1915d8bc23bf412912e7ee1ac
   window.name = "NG_DEFER_BOOTSTRAP!";
 
-  /**
-   * configure RequireJS
-   * prefer named modules to long paths, especially for version mgt
-   * or 3rd party libraries
-   */
-  require.config({
-
-    paths: {
-      'angular'         : '../vendor/angular/angular',
-      'angular-resource': '../vendor/angular-resource/angular-resource',
-      'async'           : '../vendor/requirejs-plugins/src/async',
-      'domReady'        : '../vendor/requirejs-domready/domReady'
-    },
-
+  (function () {
     /**
-     * for libs that either do not support AMD out of the box, or
-     * require some fine tuning to dependency mgt'
+     * configure RequireJS
+     * prefer named modules to long paths, especially for version mgt
+     * or 3rd party libraries
      */
-    shim: {
-      'angular': {
-        exports: 'angular'
-      },
-      'angular-mocks': {
-        deps: ['angular']
-      },
-      'angular-resource': {
-        deps: ['angular']
-      }
+    loadRequireConfig(function (config) {
+      require.config(JSON.parse(config));
+    });
+
+    function loadRequireConfig (callback) {
+      var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          callback(xmlhttp.responseText);
+        }
+      };
+
+      xmlhttp.open('GET', '/js/config-require.json', true);
+      xmlhttp.send();
     }
-  });
-
-  /**
-   * configure RequireJS
-   * prefer named modules to long paths, especially for version mgt
-   * or 3rd party libraries
-   */
-  loadRequireConfig(function(config) {
-    require.config(JSON.parse(config));
-  });
-
-  function loadRequireConfig(callback) {
-    var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        callback(xmlhttp.responseText);
-      }
-    }
-
-    xmlhttp.open('GET', '/js/config-require.json', true);
-    xmlhttp.send();
-  }
+  }());
 
 </script>
 
